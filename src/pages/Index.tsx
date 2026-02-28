@@ -25,53 +25,121 @@ const Index = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      
-      // Animate only inner content, NOT entire sections
-      gsap.utils.toArray<HTMLElement>(".reveal").forEach((el) => {
+      // ────────────────────────────────────────────────
+      // 1. Classic smooth fade + rise for text / content blocks
+      // ────────────────────────────────────────────────
+      gsap.utils.toArray<HTMLElement>(".gs_reveal").forEach((el) => {
+        // You can also split per child if you want more control inside component
         gsap.from(el, {
           opacity: 0,
-          y: 100,              // more distance
-          duration: 1.4,       // smoother timing
-          ease: "power3.out",
+          y: 90,                    // modern distance
+          scale: 0.98,              // very subtle scale-in
+          duration: 1.6,
+          ease: "power4.out",       // premium smooth easing
           scrollTrigger: {
             trigger: el,
-            start: "top 85%",
-            toggleActions: "play none none none",
+            start: "top 82%",       // bit earlier than 85%
+            end: "bottom 20%",      // helps with longer sections
+            toggleActions: "play none none reverse",
+            // markers: process.env.NODE_ENV === "development", // useful during dev
           },
         });
       });
 
-      // Batch grid/card animations
-      ScrollTrigger.batch(".reveal-card", {
+      // ────────────────────────────────────────────────
+      // 2. Batch animation for cards / grid items (very performant)
+      // ────────────────────────────────────────────────
+      ScrollTrigger.batch(".gs_reveal-card", {
         onEnter: (batch) => {
           gsap.from(batch, {
             opacity: 0,
-            y: 80,
-            duration: 1.2,
-            stagger: 0.2,
-            ease: "power3.out",
+            y: 70,
+            scale: 0.96,
+            duration: 1.4,
+            stagger: {
+              each: 0.18,           // smooth cascade
+              from: "start",        // or "center", "random"
+            },
+            ease: "power4.out",
           });
         },
-        start: "top 90%",
+        // onLeaveBack helps when scrolling up (modern feel)
+        onLeaveBack: (batch) => {
+          gsap.to(batch, {
+            opacity: 0,
+            y: 40,
+            scale: 0.97,
+            duration: 0.9,
+            overwrite: "auto",
+          });
+        },
+        start: "top 88%",
+        once: false,                // false = reversible on scroll up
       });
 
-    }, containerRef);
+      // ────────────────────────────────────────────────
+      // 3. Optional: stagger children inside a container (e.g. skill icons, project cards)
+      //    → put this inside the component if more specific control needed
+      // ────────────────────────────────────────────────
+      // Example (uncomment & adapt):
+      /*
+      gsap.utils.toArray(".gs_stagger-container").forEach((container) => {
+        gsap.from(container.querySelectorAll(".gs_stagger-item"), {
+          opacity: 0,
+          y: 60,
+          duration: 1.3,
+          stagger: 0.14,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: container,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        });
+      });
+      */
 
-    return () => ctx.revert();
+      // Optional refresh on resize (sometimes needed with dynamic content)
+      ScrollTrigger.refresh();
+
+    }, containerRef.current ?? undefined); // safer context scoping
+
+    return () => {
+      ctx.revert();
+      ScrollTrigger.getAll().forEach((t) => t.kill()); // extra safety
+    };
   }, []);
 
   return (
     <div
       ref={containerRef}
-      className="min-h-screen bg-background text-foreground"
+      className="min-h-screen bg-background text-foreground overflow-x-hidden"
     >
       <CustomCursor />
+
       <Navbar />
 
       <main>
+        {/* Hero usually has its own entrance animation — leave it out of batch */}
         <Hero />
 
-        {/* Wrap inner content inside components with className="reveal" */}
+        {/* 
+          Inside each component below you should wrap main content like this:
+          
+          <div className="gs_reveal">     ← whole section content
+            <h2>...</h2>
+            <p>...</p>
+          </div>
+
+          Or for grids/lists:
+
+          <div className="grid ...">
+            {items.map(item => (
+              <article className="gs_reveal-card">...</article>
+            ))}
+          </div>
+        */}
+
         <About />
         <Skills />
         <Projects />
