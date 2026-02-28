@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -20,94 +20,215 @@ import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
 
+const st = (trigger: Element, start = "top 88%"): gsap.TweenVars => ({
+  scrollTrigger: {
+    trigger,
+    start,
+    toggleActions: "play none none none",
+    invalidateOnRefresh: true,
+  },
+});
+
 const Index = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    if (!containerRef.current) return;
+
+    ScrollTrigger.config({ ignoreMobileResize: true });
+
     const ctx = gsap.context(() => {
-      // ────────────────────────────────────────────────
-      // 1. Classic smooth fade + rise for text / content blocks
-      // ────────────────────────────────────────────────
-      gsap.utils.toArray<HTMLElement>(".gs_reveal").forEach((el) => {
-        // You can also split per child if you want more control inside component
-        gsap.from(el, {
-          opacity: 0,
-          y: 90,                    // modern distance
-          scale: 0.98,              // very subtle scale-in
-          duration: 1.6,
-          ease: "power4.out",       // premium smooth easing
-          scrollTrigger: {
-            trigger: el,
-            start: "top 82%",       // bit earlier than 85%
-            end: "bottom 20%",      // helps with longer sections
-            toggleActions: "play none none reverse",
-            // markers: process.env.NODE_ENV === "development", // useful during dev
-          },
-        });
-      });
 
-      // ────────────────────────────────────────────────
-      // 2. Batch animation for cards / grid items (very performant)
-      // ────────────────────────────────────────────────
-      ScrollTrigger.batch(".gs_reveal-card", {
-        onEnter: (batch) => {
-          gsap.from(batch, {
-            opacity: 0,
-            y: 70,
-            scale: 0.96,
-            duration: 1.4,
-            stagger: {
-              each: 0.18,           // smooth cascade
-              from: "start",        // or "center", "random"
-            },
-            ease: "power4.out",
-          });
-        },
-        // onLeaveBack helps when scrolling up (modern feel)
-        onLeaveBack: (batch) => {
-          gsap.to(batch, {
-            opacity: 0,
-            y: 40,
-            scale: 0.97,
-            duration: 0.9,
-            overwrite: "auto",
-          });
-        },
-        start: "top 88%",
-        once: false,                // false = reversible on scroll up
-      });
-
-      // ────────────────────────────────────────────────
-      // 3. Optional: stagger children inside a container (e.g. skill icons, project cards)
-      //    → put this inside the component if more specific control needed
-      // ────────────────────────────────────────────────
-      // Example (uncomment & adapt):
-      /*
-      gsap.utils.toArray(".gs_stagger-container").forEach((container) => {
-        gsap.from(container.querySelectorAll(".gs_stagger-item"), {
+      // ─────────────────────────────────────────────────
+      // 1. NAVBAR
+      // ─────────────────────────────────────────────────
+      const navbar = document.querySelector<HTMLElement>("nav, header");
+      if (navbar) {
+        gsap.from(navbar, {
+          y: -60,
           opacity: 0,
-          y: 60,
-          duration: 1.3,
-          stagger: 0.14,
+          duration: 0.7,
           ease: "power3.out",
-          scrollTrigger: {
-            trigger: container,
-            start: "top 80%",
-            toggleActions: "play none none reverse",
+        });
+
+        // 🔥 FIX: Animate header buttons instantly (no lag)
+        const headerButtons = navbar.querySelectorAll<HTMLElement>(
+          "a, button"
+        );
+
+        if (headerButtons.length) {
+          gsap.from(headerButtons, {
+            opacity: 0,
+            y: -12,
+            duration: 0.45,
+            stagger: 0.08,
+            ease: "power2.out",
+            delay: 0.25,
+            clearProps: "transform,opacity",
+          });
+        }
+
+        let prevY = 0;
+        ScrollTrigger.create({
+          onUpdate() {
+            const curY = window.scrollY;
+            const goingDown = curY > prevY && curY > 100;
+            gsap.to(navbar, {
+              y: goingDown ? -(navbar.offsetHeight + 4) : 0,
+              duration: 0.35,
+              ease: goingDown ? "power2.in" : "power3.out",
+              overwrite: "auto",
+            });
+            prevY = curY;
           },
         });
+      }
+
+      // ─────────────────────────────────────────────────
+      // 2. HERO (excluding header buttons now)
+      // ─────────────────────────────────────────────────
+      const hero = document.querySelector<HTMLElement>(
+        "main section:first-of-type, #hero, [data-section='hero']"
+      );
+
+      if (hero) {
+        const els = Array.from(
+          hero.querySelectorAll<HTMLElement>("h1, h2, p, img, video")
+        );
+
+        if (els.length) {
+          gsap.set(els, { opacity: 0, y: 45 });
+
+          gsap.to(els, {
+            opacity: 1,
+            y: 0,
+            duration: 0.9,
+            stagger: 0.09,
+            ease: "power3.out",
+            delay: 0.4,
+            clearProps: "transform,opacity",
+          });
+        }
+      }
+
+      // ─────────────────────────────────────────────────
+      // 3. SECTION WRAPPERS
+      // ─────────────────────────────────────────────────
+      const sections = gsap.utils.toArray<HTMLElement>("main section");
+
+      sections.forEach((section, i) => {
+        if (i === 0) return;
+
+        gsap.from(section, {
+          opacity: 0,
+          y: 50,
+          duration: 0.9,
+          ease: "power3.out",
+          ...st(section, "top 86%"),
+        });
       });
-      */
 
-      // Optional refresh on resize (sometimes needed with dynamic content)
-      ScrollTrigger.refresh();
+      // ─────────────────────────────────────────────────
+      // 4. HEADINGS
+      // ─────────────────────────────────────────────────
+      gsap.utils
+        .toArray<HTMLElement>("main section h2, main section h3")
+        .forEach((el) => {
+          gsap.from(el, {
+            opacity: 0,
+            y: 35,
+            duration: 0.8,
+            ease: "power3.out",
+            ...st(el, "top 91%"),
+          });
+        });
 
-    }, containerRef.current ?? undefined); // safer context scoping
+      // ─────────────────────────────────────────────────
+      // 5. PARAGRAPHS
+      // ─────────────────────────────────────────────────
+      gsap.utils
+        .toArray<HTMLElement>("main section p")
+        .forEach((el) => {
+          gsap.from(el, {
+            opacity: 0,
+            y: 22,
+            duration: 0.75,
+            ease: "power2.out",
+            ...st(el, "top 93%"),
+          });
+        });
 
-    return () => {
-      ctx.revert();
-      ScrollTrigger.getAll().forEach((t) => t.kill()); // extra safety
-    };
+      // ─────────────────────────────────────────────────
+      // 6. CARDS
+      // ─────────────────────────────────────────────────
+      const CARD_SELECTORS = [
+        "main article",
+        "main li",
+        "main [class*='card']",
+        "main [class*='item']",
+        "main [class*='project']",
+        "main [class*='service']",
+        "main [class*='skill']",
+        "main [class*='testimonial']",
+        "main [class*='step']",
+        "main [class*='faq']",
+        "main [class*='feature']",
+        "main [class*='why']",
+        "main [class*='reason']",
+        "main [class*='process']",
+      ].join(", ");
+
+      const allMatches = gsap.utils.toArray<HTMLElement>(CARD_SELECTORS);
+
+      const cards = allMatches.filter(
+        (el) => !allMatches.some((other) => other !== el && other.contains(el))
+      );
+
+      if (cards.length) {
+        gsap.set(cards, { opacity: 0, y: 45 });
+
+        ScrollTrigger.batch(cards, {
+          start: "top 91%",
+          onEnter: (batch) =>
+            gsap.to(batch, {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              stagger: 0.08,
+              ease: "power3.out",
+              clearProps: "transform,opacity",
+            }),
+        });
+
+        cards.forEach((card) => {
+          card.addEventListener("mouseenter", () =>
+            gsap.to(card, { y: -6, duration: 0.25, ease: "power2.out" })
+          );
+          card.addEventListener("mouseleave", () =>
+            gsap.to(card, { y: 0, duration: 0.4, ease: "power3.out" })
+          );
+        });
+      }
+
+      // ─────────────────────────────────────────────────
+      // 7. FOOTER
+      // ─────────────────────────────────────────────────
+      const footer = document.querySelector<HTMLElement>("footer");
+      if (footer) {
+        gsap.from(footer, {
+          opacity: 0,
+          y: 40,
+          duration: 0.9,
+          ease: "power3.out",
+          ...st(footer, "top 96%"),
+        });
+      }
+
+      setTimeout(() => ScrollTrigger.refresh(), 500);
+
+    }, containerRef.current);
+
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -116,30 +237,10 @@ const Index = () => {
       className="min-h-screen bg-background text-foreground overflow-x-hidden"
     >
       <CustomCursor />
-
       <Navbar />
 
       <main>
-        {/* Hero usually has its own entrance animation — leave it out of batch */}
         <Hero />
-
-        {/* 
-          Inside each component below you should wrap main content like this:
-          
-          <div className="gs_reveal">     ← whole section content
-            <h2>...</h2>
-            <p>...</p>
-          </div>
-
-          Or for grids/lists:
-
-          <div className="grid ...">
-            {items.map(item => (
-              <article className="gs_reveal-card">...</article>
-            ))}
-          </div>
-        */}
-
         <About />
         <Skills />
         <Projects />
