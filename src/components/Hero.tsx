@@ -16,7 +16,7 @@ const Hero = () => {
 
     const phrases = [
       "Hi, I'm Hassaan Aslam",
-      "Frontend Developer",
+      "I'm Frontend Developer",
       "I create Smooth, Interactive UIs",
       "I create Interactive Web Applications"
     ];
