@@ -1,25 +1,66 @@
-import { Suspense } from "react";
+"use client";
+
+import { Suspense, useEffect, useRef } from "react";
 import { ArrowDown, Download, MessageCircle } from "lucide-react";
 import ParticleSphere from "./ParticleSphere";
+import { gsap } from "gsap";
+import { TextPlugin } from "gsap/TextPlugin";
+
+gsap.registerPlugin(TextPlugin);
 
 const Hero = () => {
+  const typeRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    if (!typeRef.current) return;
+
+    const phrases = [
+      "Hi, I'm Hassaan Aslam",
+      "Frontend Developer",
+      "I create Smooth, Interactive UIs",
+      "I create Interactive Web Applications"
+    ];
+
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1 });
+
+    phrases.forEach((text) => {
+      tl.to(typeRef.current, {
+        duration: 1.5,
+        text: text,
+        ease: "none",
+      });
+      tl.to(typeRef.current, {
+        duration: 1,
+        text: "",
+        ease: "none",
+        delay: 1, // pause before erasing
+      });
+    });
+  }, []);
+
   return (
-    <section className="relative min-h-screen flex items-center section-padding pt-28" id="hero">
+    <section
+      className="relative min-h-screen flex items-center section-padding pt-28"
+      id="hero"
+    >
       <div className="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-8 items-center">
         <div className="space-y-6 z-10">
           <p className="font-mono text-primary text-sm tracking-widest uppercase">
             Frontend Developer
           </p>
-          <h1 className="text-5xl md:text-7xl font-bold leading-tight">
-            Hi, I'm{" "}
-            <span className="gradient-text">Hassaan</span>
-            <br />
-            <span className="gradient-text">Aslam</span>
-          </h1>
+
+          {/* Typewriter/Typing Animation */}
+          <h1
+            ref={typeRef}
+            className="text-5xl md:text-7xl font-bold leading-tight gradient-text"
+          ></h1>
+
           <p className="text-lg text-muted-foreground max-w-lg leading-relaxed">
-            I craft high-performance, pixel-perfect web experiences with React & Next.js.
-            2+ years of turning complex designs into seamless, responsive interfaces.
+            I craft high-performance, pixel-perfect web experiences with React &
+            Next.js. 2+ years of turning complex designs into seamless,
+            responsive interfaces.
           </p>
+
           <div className="flex flex-wrap gap-4 pt-2">
             <a
               href="#contact"
@@ -36,6 +77,7 @@ const Hero = () => {
               Resume
             </a>
           </div>
+
           <div className="flex items-center gap-6 pt-4 text-muted-foreground text-sm font-mono">
             <span className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />

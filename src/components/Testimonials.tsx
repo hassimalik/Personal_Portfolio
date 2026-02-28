@@ -25,8 +25,8 @@ const Testimonials = () => {
   return (
     <section id="testimonials" className="section-padding">
       <div className="max-w-7xl mx-auto">
-        <p className="font-mono text-primary text-sm tracking-widest uppercase mb-2">Testimonials</p>
-        <h2 className="text-3xl md:text-4xl font-bold mb-10">
+        <p className="font-mono text-primary  text-sm tracking-widest uppercase mb-2">Testimonials</p>
+        <h2 className="text-3xl md:text-4xl  font-bold mb-10">
           Client <span className="gradient-text">Reviews</span>
         </h2>
 

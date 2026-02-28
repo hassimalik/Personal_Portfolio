@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -20,20 +22,21 @@ import CustomCursor from "@/components/CustomCursor";
 
 const Index = () => {
   useEffect(() => {
-    // Animate each section wrapper for smooth reveal
+    // Animate each section wrapper for cinematic reveal
     const sections = document.querySelectorAll("section");
     sections.forEach((section) => {
       gsap.fromTo(
         section,
-        { opacity: 0, y: 50 },
+        { opacity: 0, y: 120, scale: 0.95 }, // larger offset + subtle scale
         {
           opacity: 1,
           y: 0,
-          duration: 1,
+          scale: 1,
+          duration: 1.8, // longer duration
           ease: "power3.out",
           scrollTrigger: {
             trigger: section,
-            start: "top 80%",
+            start: "top 85%",
             toggleActions: "play none none none",
             markers: false,
           },
@@ -45,12 +48,13 @@ const Index = () => {
     const children = document.querySelectorAll(".fade-in-child");
     gsap.fromTo(
       children,
-      { opacity: 0, y: 30 },
+      { opacity: 0, y: 60, scale: 0.97 },
       {
         opacity: 1,
         y: 0,
-        duration: 0.6,
-        stagger: 0.1,
+        scale: 1,
+        duration: 1.2,
+        stagger: 0.15,
         ease: "power3.out",
         scrollTrigger: {
           trigger: children,
@@ -66,9 +70,10 @@ const Index = () => {
       onEnter: (batch) => {
         gsap.to(batch, {
           opacity: 1,
-          y: 0,
-          stagger: 0.1,
-          duration: 0.6,
+          y: 80, // bigger vertical offset
+          scale: 1,
+          stagger: 0.15,
+          duration: 1.3,
           ease: "power3.out",
         });
       },
