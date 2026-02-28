@@ -13,7 +13,7 @@ const About = () => {
           <div className="space-y-6">
             <p className="text-muted-foreground leading-relaxed">
               I'm a passionate Frontend Developer with 2+ years of experience building
-              high-performance, responsive web applications. Specializing in React, Next.js,
+              high-performance, responsive web applications. With Expertise in React, Next.js,
               and modern UI frameworks, I transform complex Figma designs into pixel-perfect,
               accessible interfaces.
             </p>
