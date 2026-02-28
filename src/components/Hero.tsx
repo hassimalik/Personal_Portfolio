@@ -1,41 +1,53 @@
 "use client";
 
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { ArrowDown, Download, MessageCircle } from "lucide-react";
 import ParticleSphere from "./ParticleSphere";
-import { gsap } from "gsap";
-import { TextPlugin } from "gsap/TextPlugin";
-
-gsap.registerPlugin(TextPlugin);
 
 const Hero = () => {
+  const [displayText, setDisplayText] = useState("");
   const typeRef = useRef<HTMLHeadingElement>(null);
 
+  const phrases = [
+    "Hi, I'm Hassaan Aslam",
+    "I'm Frontend Developer",
+    "I create Smooth, Interactive UIs",
+    "I build Interactive Web Applications",
+  ];
+
   useEffect(() => {
-    if (!typeRef.current) return;
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let deleting = false;
+    let timeout: NodeJS.Timeout;
 
-    const phrases = [
-      "Hi, I'm Hassaan Aslam",
-      "I'm Frontend Developer",
-      "I create Smooth, Interactive UIs",
-      "I create Interactive Web Applications"
-    ];
+    const type = () => {
+      const currentPhrase = phrases[phraseIndex];
+      if (!deleting) {
+        // Typing
+        setDisplayText(currentPhrase.slice(0, charIndex + 1));
+        charIndex++;
+        if (charIndex === currentPhrase.length) {
+          deleting = true;
+          timeout = setTimeout(type, 1500); // pause at full text
+          return;
+        }
+      } else {
+        // Deleting
+        setDisplayText(currentPhrase.slice(0, charIndex - 1));
+        charIndex--;
+        if (charIndex === 0) {
+          deleting = false;
+          phraseIndex = (phraseIndex + 1) % phrases.length;
+        }
+      }
+      const delay = deleting ? 50 : 120; // faster delete, slower type
+      timeout = setTimeout(type, delay);
+    };
 
-    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1 });
+    type();
 
-    phrases.forEach((text) => {
-      tl.to(typeRef.current, {
-        duration: 1.5,
-        text: text,
-        ease: "none",
-      });
-      tl.to(typeRef.current, {
-        duration: 1,
-        text: "",
-        ease: "none",
-        delay: 1, // pause before erasing
-      });
-    });
+    return () => clearTimeout(timeout);
   }, []);
 
   return (
@@ -45,23 +57,26 @@ const Hero = () => {
     >
       <div className="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-8 items-center">
         <div className="space-y-6 z-10">
-          <p className="font-mono text-primary text-sm tracking-widest uppercase">
+          <p className="font-mono text-primary text-sm tracking-widest uppercase fade-in-child">
             Frontend Developer
           </p>
 
-          {/* Typewriter/Typing Animation */}
+          {/* Typewriter / Typing Animation */}
           <h1
             ref={typeRef}
             className="text-5xl md:text-7xl font-bold leading-tight gradient-text"
-          ></h1>
+          >
+            {displayText}
+            <span className="border-r-2 border-primary animate-blink ml-1" />
+          </h1>
 
-          <p className="text-lg text-muted-foreground max-w-lg leading-relaxed">
+          <p className="text-lg text-muted-foreground max-w-lg leading-relaxed fade-in-child">
             I craft high-performance, pixel-perfect web experiences with React &
             Next.js. 2+ years of turning complex designs into seamless,
             responsive interfaces.
           </p>
 
-          <div className="flex flex-wrap gap-4 pt-2">
+          <div className="flex flex-wrap gap-4 pt-2 fade-in-child">
             <a
               href="#contact"
               className="inline-flex items-center gap-2 px-7 py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:shadow-[0_0_30px_hsl(175_80%_50%/0.4)] transition-all duration-300"
@@ -78,7 +93,7 @@ const Hero = () => {
             </a>
           </div>
 
-          <div className="flex items-center gap-6 pt-4 text-muted-foreground text-sm font-mono">
+          <div className="flex items-center gap-6 pt-4 text-muted-foreground text-sm font-mono fade-in-child">
             <span className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
               Available for work
@@ -105,6 +120,19 @@ const Hero = () => {
       >
         <ArrowDown size={24} />
       </a>
+
+      {/* Tailwind blink animation */}
+      <style>
+        {`
+          @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0; }
+          }
+          .animate-blink {
+            animation: blink 1s step-start infinite;
+          }
+        `}
+      </style>
     </section>
   );
 };
