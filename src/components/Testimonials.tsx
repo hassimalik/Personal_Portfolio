@@ -27,7 +27,7 @@ const Testimonials = () => {
       <div className="max-w-7xl mx-auto">
         <p className="font-mono text-primary  text-sm tracking-widest uppercase mb-2">Testimonials</p>
         <h2 className="text-3xl md:text-4xl  font-bold mb-10">
-          Client <span className="gradient-text">Reviews</span>
+          What <span className="gradient-text">People Say about my Work</span>
         </h2>
 
         <div className="grid md:grid-cols-3 gap-8">

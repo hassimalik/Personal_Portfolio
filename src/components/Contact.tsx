@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Send, Phone, Mail, MapPin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
 
 const contactSchema = z.object({

@@ -85,7 +85,8 @@ const Hero = () => {
               Let's Talk
             </a>
             <a
-              href="#about"
+              href="/resume-hassaan-aslam.pdf"
+              download="Hassaan-Aslam-Resume.pdf"
               className="inline-flex items-center gap-2 px-7 py-3 rounded-lg border border-border text-foreground font-semibold hover:border-primary/50 hover:text-primary transition-all duration-300"
             >
               <Download size={18} />

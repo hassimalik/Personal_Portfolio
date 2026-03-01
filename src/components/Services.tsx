@@ -3,7 +3,7 @@ import { Check } from "lucide-react";
 const packages = [
   {
     name: "Starter",
-    price: "$500",
+    price: "$200",
     description: "Perfect for small businesses needing a web presence.",
     features: [
       "Single-page responsive website",
@@ -11,11 +11,12 @@ const packages = [
       "Contact form integration",
       "Basic SEO setup",
       "2 revision rounds",
+      "Estimated delivery: 5-7 days"
     ],
   },
   {
     name: "Professional",
-    price: "$1,500",
+    price: "$400",
     description: "For businesses needing a polished, multi-page site.",
     features: [
       "Up to 5 pages",
@@ -24,6 +25,10 @@ const packages = [
       "Advanced SEO & performance",
       "Responsive across all devices",
       "5 revision rounds",
+      "Extra Pages: $75/page",
+      "Extra Revisions: $25/revision",
+      "Additional GSAP animations: $50",
+      "Estimated delivery: 10-14 days"
     ],
     popular: true,
   },
@@ -48,7 +53,7 @@ const Services = () => {
       <div className="max-w-7xl mx-auto">
         <p className="font-mono text-primary text-sm tracking-widest uppercase mb-2">Services</p>
         <h2 className="text-3xl md:text-4xl font-bold mb-4">
-          Freelance <span className="gradient-text">Packages</span>
+          What I <span className="gradient-text">Offer</span>
         </h2>
         <p className="text-muted-foreground mb-10 max-w-2xl">
           Transparent pricing for quality work. Every project gets my full attention and expertise.
