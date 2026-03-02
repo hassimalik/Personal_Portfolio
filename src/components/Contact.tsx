@@ -17,10 +17,10 @@ const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [sending, setSending] = useState(false);
 
-  // EmailJS values
+  // EmailJS config
   const SERVICE_ID = "service_yp2inew";
-  const TEMPLATE_ID_YOU = "template_hq6vks9";      // Your template for receiving messages
-  const TEMPLATE_ID_AUTO = "template_auto_reply";  // Your template for client auto-reply
+  const TEMPLATE_ID_RECEIVE = "template_9scy6zs";  // Receiving email template
+  const TEMPLATE_ID_AUTO = "template_hq6vks9";     // Auto-reply template
   const PUBLIC_KEY = "vN62NPCLnOVnExdOL";
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -39,29 +39,26 @@ const Contact = () => {
     setSending(true);
 
     try {
-      // Send client message to your Gmail
+      // Send client message to your inbox
       await emailjs.send(
         SERVICE_ID,
-        TEMPLATE_ID_YOU,
+        TEMPLATE_ID_RECEIVE,
         {
-          from_name: form.name.trim(),
-          from_email: form.email.trim(),
+          name: form.name.trim(),
+          email: form.email.trim(),
           message: form.message.trim(),
-          subject: "New Contact Form Message",
-          to_email: "hassaanaslam.dev@gmail.com",
         },
         PUBLIC_KEY
       );
 
-      // Auto-reply to client
+      // Send auto-reply to client
       await emailjs.send(
         SERVICE_ID,
         TEMPLATE_ID_AUTO,
         {
           name: form.name.trim(),
-          email: form.email.trim(),
           message: form.message.trim(),
-          title: "Thanks for reaching out!",
+          email: form.email.trim(), // only if template allows it
         },
         PUBLIC_KEY
       );
@@ -95,6 +92,7 @@ const Contact = () => {
         </h2>
 
         <div className="grid md:grid-cols-2 gap-8">
+          {/* Left info */}
           <div className="space-y-6">
             <p className="text-muted-foreground leading-relaxed">
               Have a project in mind? Let's discuss how I can help bring your vision to life.
@@ -131,9 +129,10 @@ const Contact = () => {
             </a>
           </div>
 
+          {/* Contact form */}
           <form onSubmit={handleSubmit} className="glass-panel p-8 space-y-5">
             <div>
-              <label className="block text-sm font-medium mb-2" htmlFor="name">
+              <label htmlFor="name" className="block text-sm font-medium mb-2">
                 Name
               </label>
               <input
@@ -147,7 +146,7 @@ const Contact = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2" htmlFor="email">
+              <label htmlFor="email" className="block text-sm font-medium mb-2">
                 Email
               </label>
               <input
@@ -161,7 +160,7 @@ const Contact = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2" htmlFor="message">
+              <label htmlFor="message" className="block text-sm font-medium mb-2">
                 Message
               </label>
               <textarea
