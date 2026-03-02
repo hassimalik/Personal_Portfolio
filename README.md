@@ -1,73 +1,63 @@
-# Welcome to your Lovable project
+# HA Web Solutions – Frontend Developer Portfolio
 
-## Project info
+A modern, interactive, and visually engaging **frontend portfolio** built with **React, Next.js, TailwindCSS, and GSAP**. This project showcases web development skills through smooth animations, responsive design, and real-time client communication.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+---
 
-## How can I edit this code?
+## 🔹 Features
 
-There are several ways of editing your application.
+- **Hero Section with WOW Animations:** Layered animations, subtle blur, and smooth scale effects create a memorable first impression.  
+- **GSAP & ScrollSmoother:** Smooth scrolling and animated transitions for an elegant, lag-free experience.  
+- **Interactive Projects:** Showcase projects with card reveals, hover effects, and responsive layouts.  
+- **Contact Form Integration:** Real-time messages with **EmailJS** and automated client replies.  
+- **Custom Cursor & Micro-Interactions:** Engaging micro-interactions for buttons, links, and other UI elements.  
+- **Fully Responsive:** Optimized for desktop, tablet, and mobile devices.  
+- **Professional Styling:** TailwindCSS-based modern design with gradients, shadows, and subtle hover effects.
 
-**Use Lovable**
+---
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## 💻 Tech Stack
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Frontend:** React, Next.js  
+- **Styling:** TailwindCSS, CSS Modules  
+- **Animations:** GSAP, ScrollSmoother  
+- **Forms & Communication:** EmailJS, Zod (for validation)  
+- **Icons:** Lucide React  
+- **Hosting/Deployment:** Vercel  
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Screenshots
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+<img width="1919" height="985" alt="image" src="https://github.com/user-attachments/assets/c0dcd795-8b2a-4f1f-8ec7-e349387d9d0a" />
 
-Follow these steps:
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+---
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
 
-# Step 3: Install the necessary dependencies.
-npm i
+<img width="1919" height="849" alt="image" src="https://github.com/user-attachments/assets/fa2da010-cb3a-4459-8ac7-5e7b1c5644f3" />
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+---
 
-**Edit a file directly in GitHub**
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+<img width="1918" height="893" alt="image" src="https://github.com/user-attachments/assets/2e6189a2-06c4-4a46-9abc-d2081b50d2e5" />
 
-**Use GitHub Codespaces**
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+<img width="1919" height="994" alt="image" src="https://github.com/user-attachments/assets/d11ab68e-e47c-41ad-8a27-eff6b195ded1" />
 
-This project is built with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
 
-## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
 
-## Can I connect a custom domain to my Lovable project?
 
-Yes, you can!
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+## 🚀 Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/ha-web-solutions.git
+   cd ha-web-solutions
