@@ -1,7 +1,10 @@
+"use client";
+
 import { useState } from "react";
 import { Send, Phone, Mail, MapPin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
+import emailjs from "@emailjs/browser";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
@@ -14,24 +17,68 @@ const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [sending, setSending] = useState(false);
 
+  // EmailJS values
+  const SERVICE_ID = "service_yp2inew";
+  const TEMPLATE_ID_YOU = "template_hq6vks9";      // Your template for receiving messages
+  const TEMPLATE_ID_AUTO = "template_auto_reply";  // Your template for client auto-reply
+  const PUBLIC_KEY = "vN62NPCLnOVnExdOL";
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = contactSchema.safeParse(form);
+
     if (!result.success) {
-      toast({ title: "Validation Error", description: result.error.errors[0].message, variant: "destructive" });
+      toast({
+        title: "Validation Error",
+        description: result.error.errors[0].message,
+        variant: "destructive",
+      });
       return;
     }
+
     setSending(true);
+
     try {
-      const { data, error } = await supabase.functions.invoke("send-contact", {
-        body: { name: form.name.trim(), email: form.email.trim(), message: form.message.trim() },
+      // Send client message to your Gmail
+      await emailjs.send(
+        SERVICE_ID,
+        TEMPLATE_ID_YOU,
+        {
+          from_name: form.name.trim(),
+          from_email: form.email.trim(),
+          message: form.message.trim(),
+          subject: "New Contact Form Message",
+          to_email: "hassaanaslam.dev@gmail.com",
+        },
+        PUBLIC_KEY
+      );
+
+      // Auto-reply to client
+      await emailjs.send(
+        SERVICE_ID,
+        TEMPLATE_ID_AUTO,
+        {
+          name: form.name.trim(),
+          email: form.email.trim(),
+          message: form.message.trim(),
+          title: "Thanks for reaching out!",
+        },
+        PUBLIC_KEY
+      );
+
+      toast({
+        title: "Message Sent!",
+        description: "Thanks for reaching out. You'll receive a reply shortly!",
       });
-      if (error) throw error;
-      toast({ title: "Message Sent!", description: "Thanks for reaching out. I'll get back to you soon!" });
+
       setForm({ name: "", email: "", message: "" });
     } catch (err) {
       console.error(err);
-      toast({ title: "Error", description: "Failed to send message. Please try again.", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setSending(false);
     }
@@ -40,7 +87,9 @@ const Contact = () => {
   return (
     <section id="contact" className="section-padding">
       <div className="max-w-7xl mx-auto">
-        <p className="font-mono text-primary text-sm tracking-widest uppercase mb-2">Contact</p>
+        <p className="font-mono text-primary text-sm tracking-widest uppercase mb-2">
+          Contact
+        </p>
         <h2 className="text-3xl md:text-4xl font-bold mb-10">
           Let's <span className="gradient-text">Connect</span>
         </h2>
@@ -53,7 +102,7 @@ const Contact = () => {
             </p>
             <div className="space-y-4">
               {[
-                { icon: Mail, label: "hassaanaslam0321@gmail.com", href: "mailto:hassaanaslam0321@gmail.com" },
+                { icon: Mail, label: "hassaanaslam.dev@gmail.com", href: "mailto:hassaanaslam.dev@gmail.com" },
                 { icon: Phone, label: "+923246288562", href: "https://wa.me/923246288562" },
                 { icon: MapPin, label: "Lahore, Punjab, Pakistan", href: "#" },
               ].map(({ icon: Icon, label, href }) => (
@@ -84,7 +133,9 @@ const Contact = () => {
 
           <form onSubmit={handleSubmit} className="glass-panel p-8 space-y-5">
             <div>
-              <label className="block text-sm font-medium mb-2" htmlFor="name">Name</label>
+              <label className="block text-sm font-medium mb-2" htmlFor="name">
+                Name
+              </label>
               <input
                 id="name"
                 type="text"
@@ -96,7 +147,9 @@ const Contact = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2" htmlFor="email">Email</label>
+              <label className="block text-sm font-medium mb-2" htmlFor="email">
+                Email
+              </label>
               <input
                 id="email"
                 type="email"
@@ -108,7 +161,9 @@ const Contact = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2" htmlFor="message">Message</label>
+              <label className="block text-sm font-medium mb-2" htmlFor="message">
+                Message
+              </label>
               <textarea
                 id="message"
                 rows={5}

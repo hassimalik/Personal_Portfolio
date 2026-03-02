@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useRef, useState } from "react";
-import { ArrowDown, Download, MessageCircle } from "lucide-react";
+import { ArrowDown, Download, MessageCircle, Linkedin, Youtube, Facebook, Github } from "lucide-react";
 import ParticleSphere from "./ParticleSphere";
 
 const Hero = () => {
@@ -24,16 +24,14 @@ const Hero = () => {
     const type = () => {
       const currentPhrase = phrases[phraseIndex];
       if (!deleting) {
-        // Typing
         setDisplayText(currentPhrase.slice(0, charIndex + 1));
         charIndex++;
         if (charIndex === currentPhrase.length) {
           deleting = true;
-          timeout = setTimeout(type, 1500); // pause at full text
+          timeout = setTimeout(type, 1500);
           return;
         }
       } else {
-        // Deleting
         setDisplayText(currentPhrase.slice(0, charIndex - 1));
         charIndex--;
         if (charIndex === 0) {
@@ -41,14 +39,20 @@ const Hero = () => {
           phraseIndex = (phraseIndex + 1) % phrases.length;
         }
       }
-      const delay = deleting ? 50 : 120; // faster delete, slower type
+      const delay = deleting ? 50 : 120;
       timeout = setTimeout(type, delay);
     };
 
     type();
-
     return () => clearTimeout(timeout);
   }, []);
+
+  const socialLinks = [
+    { icon: Linkedin, href: "https://www.linkedin.com/in/hassaan-aslam-3b0798290/" },
+    { icon: Youtube, href: "https://youtube.com/@codingthirst" },
+    { icon: Facebook, href: "https://www.facebook.com/profile.php?id=61588569246765" },
+    { icon: Github, href: "https://github.com/hassimalik" },
+  ];
 
   return (
     <section
@@ -61,7 +65,6 @@ const Hero = () => {
             Frontend Developer
           </p>
 
-          {/* Typewriter / Typing Animation */}
           <h1
             ref={typeRef}
             className="text-5xl md:text-7xl font-bold leading-tight gradient-text"
@@ -71,9 +74,8 @@ const Hero = () => {
           </h1>
 
           <p className="text-lg text-muted-foreground max-w-lg leading-relaxed fade-in-child">
-            I craft high-performance, pixel-perfect web experiences with React &
-            Next.js. 2+ years of turning complex designs into seamless,
-            responsive interfaces.
+            I craft high-performance, pixel-perfect web experiences with React & Next.js. 2+ years
+            of turning complex designs into seamless, responsive interfaces.
           </p>
 
           <div className="flex flex-wrap gap-4 pt-2 fade-in-child">
@@ -94,11 +96,26 @@ const Hero = () => {
             </a>
           </div>
 
-          <div className="flex items-center gap-6 pt-4 text-muted-foreground text-sm font-mono fade-in-child">
-            <span className="flex items-center gap-2">
+          <div className="flex flex-col gap-4 pt-4 text-sm fade-in-child">
+            <span className="flex items-center gap-2 text-muted-foreground font-mono">
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
               Available for work
             </span>
+
+            {/* Social icons under "Available for work" */}
+            <div className="flex gap-4">
+              {socialLinks.map(({ icon: Icon, href }, idx) => (
+                <a
+                  key={idx}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3 rounded-full bg-secondary border border-border text-muted-foreground hover:bg-primary hover:text-primary-foreground hover:scale-110 transition-transform transition-colors duration-300 shadow-lg"
+                >
+                  <Icon size={20} />
+                </a>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -122,7 +139,6 @@ const Hero = () => {
         <ArrowDown size={24} />
       </a>
 
-      {/* Tailwind blink animation */}
       <style>
         {`
           @keyframes blink {
