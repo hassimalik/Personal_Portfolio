@@ -26,85 +26,176 @@ const Index = () => {
   useLayoutEffect(() => {
     if (!containerRef.current) return;
 
-    // Kill any previous triggers
     ScrollTrigger.getAll().forEach((t) => t.kill());
 
     const ctx = gsap.context(() => {
-      // NAVBAR
+
+      // ── NAVBAR — slides down on load ─────────────────────────
       const navbar = containerRef.current!.querySelector("nav, header");
       if (navbar) {
-        gsap.fromTo(
-          navbar,
-          { y: -40, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" }
-        );
+        gsap.set(navbar, { y: -60, opacity: 0 });
+        gsap.to(navbar, {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          delay: 0.1,
+          ease: "power3.out",
+        });
       }
 
-      // HERO
-      const hero =
-        containerRef.current!.querySelector("main > section:first-of-type");
-
-      if (hero) {
-        gsap.fromTo(
-          hero.children,
-          { y: 30, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            stagger: 0.07,
-            ease: "power2.out",
-            delay: 0.3,
-          }
-        );
-      }
-
-      // SECTIONS (THE IMPORTANT PART)
+      // ── SCROLL SECTIONS (Hero is fully isolated) ─────────────
       const sections = gsap.utils.toArray<HTMLElement>(
-        containerRef.current!.querySelectorAll("main > section")
+        containerRef.current!.querySelectorAll("main > section:not(#hero)")
       );
 
-      sections.forEach((section, index) => {
-        if (index === 0) return;
+      sections.forEach((section) => {
 
-        gsap.fromTo(
-          section,
-          { opacity: 0, y: 40 },
-          {
+        // Section headings — perspective blur drop
+        const headings = section.querySelectorAll("h2, h3");
+        if (headings.length > 0) {
+          gsap.set(headings, { opacity: 0, y: 40, filter: "blur(6px)" });
+          gsap.to(headings, {
             opacity: 1,
             y: 0,
-            duration: 0.7,
+            filter: "blur(0px)",
+            duration: 0.9,
+            stagger: 0.1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: section,
+              start: "top 83%",
+              once: true,
+            },
+          });
+        }
+
+        // Sub-headings h4, h5, h6
+        const subHeadings = section.querySelectorAll("h4, h5, h6");
+        if (subHeadings.length > 0) {
+          gsap.set(subHeadings, { opacity: 0, y: 20 });
+          gsap.to(subHeadings, {
+            opacity: 1,
+            y: 0,
+            duration: 0.65,
+            stagger: 0.08,
             ease: "power2.out",
             scrollTrigger: {
               trigger: section,
-              start: "top 85%",
+              start: "top 80%",
               once: true,
-              invalidateOnRefresh: false,
             },
-          }
-        );
-      });
+          });
+        }
 
-      // FOOTER
-      const footer =
-        containerRef.current!.querySelector("footer");
-
-      if (footer) {
-        gsap.fromTo(
-          footer,
-          { opacity: 0, y: 30 },
-          {
+        // Paragraphs & list items — clean fade up
+        const bodyText = section.querySelectorAll("p, li");
+        if (bodyText.length > 0) {
+          gsap.set(bodyText, { opacity: 0, y: 22 });
+          gsap.to(bodyText, {
             opacity: 1,
             y: 0,
             duration: 0.7,
+            stagger: 0.055,
             ease: "power2.out",
             scrollTrigger: {
-              trigger: footer,
-              start: "top 95%",
+              trigger: section,
+              start: "top 80%",
               once: true,
             },
-          }
+          });
+        }
+
+        // Images — opacity + y only, zero blur/scale for GPU performance
+        const images = section.querySelectorAll("img");
+        if (images.length > 0) {
+          gsap.set(images, { opacity: 0, y: 25 });
+          gsap.to(images, {
+            opacity: 1,
+            y: 0,
+            duration: 0.7,
+            stagger: 0.09,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: section,
+              start: "top 80%",
+              once: true,
+            },
+          });
+        }
+
+        // Buttons & links — snappy, zero blur/scale
+        const ctas = section.querySelectorAll("button, a");
+        if (ctas.length > 0) {
+          gsap.set(ctas, { opacity: 0, y: 14 });
+          gsap.to(ctas, {
+            opacity: 1,
+            y: 0,
+            duration: 0.4,
+            stagger: 0.04,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: section,
+              start: "top 76%",
+              once: true,
+            },
+          });
+        }
+
+        // Cards — slight scale for depth, safe on div elements
+        const cards = section.querySelectorAll(
+          "[class*='card'], [class*='Card'], [class*='project'], [class*='skill'], [class*='service'], [class*='item']"
         );
+        if (cards.length > 0) {
+          gsap.set(cards, { opacity: 0, y: 45, scale: 0.96 });
+          gsap.to(cards, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: section,
+              start: "top 82%",
+              once: true,
+            },
+          });
+        }
+
+        // SVG icons & decorative elements
+        const svgs = section.querySelectorAll("svg:not([class*='icon'])");
+        if (svgs.length > 0) {
+          gsap.set(svgs, { opacity: 0, scale: 0.8 });
+          gsap.to(svgs, {
+            opacity: 1,
+            scale: 1,
+            duration: 0.6,
+            stagger: 0.07,
+            ease: "back.out(1.5)",
+            scrollTrigger: {
+              trigger: section,
+              start: "top 82%",
+              once: true,
+            },
+          });
+        }
+      });
+
+      // ── FOOTER — fade up ─────────────────────────────────────
+      const footer = containerRef.current!.querySelector("footer");
+      if (footer) {
+        gsap.set(footer, { opacity: 0, y: 40 });
+        gsap.to(footer, {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: footer,
+            start: "top 95%",
+            once: true,
+          },
+        });
       }
 
       ScrollTrigger.refresh();
