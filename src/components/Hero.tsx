@@ -195,8 +195,8 @@ const Hero = () => {
           </h1>
 
           <p className="hero-desc text-lg text-muted-foreground max-w-lg leading-relaxed">
-            I craft high-performance, pixel-perfect web experiences with React & Next.js.
-            Turning complex ideas into seamless, interactive interfaces.
+            I Craft High-performance, Pixel-Perfect Web Experiences With React & Next.js.
+            Turning Complex Ideas into Seamless, Interactive Interfaces.
           </p>
 
           <div className="flex flex-wrap gap-4 pt-2">
