@@ -25,7 +25,7 @@ const About = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
               {[
-                { icon: Mail, label: "hassaanaslam0321@gmail.com" },
+                { icon: Mail, label: "hassaanaslam.dev@gmail.com" },
                 { icon: Phone, label: "+923246288562" },
                 { icon: MapPin, label: "Lahore, Punjab, Pakistan" },
                 { icon: Briefcase, label: "2+ Years Experience" },
