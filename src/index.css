@@ -131,3 +131,8 @@
 * {
   cursor: none !important;
 }
+
+/* Or target the html/body element */
+html {
+  cursor: none;
+}
